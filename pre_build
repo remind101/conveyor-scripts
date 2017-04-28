@@ -1,0 +1,8 @@
+#!/bin/sh
+
+export DOCKER_USERNAME=$(aws ssm get-parameters --name conveyor.dockerusername --with-decryption --query Parameters[0].Value --output text)
+export DOCKER_PASSWORD=$(aws ssm get-parameters --name conveyor.dockerpassword --with-decryption --query Parameters[0].Value --output text)
+docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+echo "Logged into Docker"
+docker pull "$Repository:$Branch" || docker pull "$Repository:master" || true
+echo "Pulled Image"
